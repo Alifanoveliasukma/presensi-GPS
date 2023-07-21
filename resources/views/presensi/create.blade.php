@@ -94,15 +94,15 @@ $("#takeabsen").click(function(e) {
         data: {
             _token:"{{ csrf_token() }}",
             image:image,
-            lokasi:lokasi
+            lokasi:lokasi,
         },
         cache:false,
         success: function(respond){
             var status = respond.split("|")
-            if(status == "success") {
+            if(status[0] == "success") {
                 Swal.fire({
                     title: "Berhasil",
-                    text: status,
+                    text: status[1],
                     icon: 'success',
                 })
                 setTimeout("location.href='/dashboard'", 3000);           

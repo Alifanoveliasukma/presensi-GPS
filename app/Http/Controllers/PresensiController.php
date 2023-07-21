@@ -25,11 +25,17 @@ class PresensiController extends Controller
         $lokasi = $request->lokasi;
         $image = $request->image;
         $folderPath = "public/uploads/absensi/";
-        $formatName = $nik ."-" . $tgl_presensi;
-        $image_parts = explode(";base64",$image);
+        $formatName = $nik . "-" . $tgl_presensi;
+    
+        $image_parts = explode(";base64", $image);
         $image_base64 = base64_decode($image_parts[1]);
-        $fileName = $formatName . ".png";
+    
+        // Buat nama file dengan menambahkan timestamp ke dalamnya
+        $timestamp = time(); // Waktu saat ini dalam bentuk UNIX timestamp
+        $fileName = $formatName . "-" . $timestamp . ".png";
+    
         $file = $folderPath . $fileName;
+
         
         $cek = DB::table('presensi')->where('tgl_presensi', $tgl_presensi)->where('nik', $nik)->count();
         if($cek > 0){
