@@ -35,7 +35,11 @@
 </div>
 <div class="row">
     <div class="col">
+        @if ($cek > 0)
+        <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
+        @else
         <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
+        @endif
     </div>
 </div>
 <div class="row mt-2">
@@ -79,5 +83,39 @@ var circle = L.circle([position.coords.latitude, position.coords.longitude], {
 function errorCallback() {
 
 }
+$("#takeabsen").click(function(e) {
+    Webcam.snap(function(uri) {
+        image = uri;
+    });
+    var lokasi = $("#lokasi").val();
+    $.ajax({
+        type: 'POST',
+        url: '/presensi/store',
+        data: {
+            _token:"{{ csrf_token() }}",
+            image:image,
+            lokasi:lokasi
+        },
+        cache:false,
+        success: function(respond){
+            var status = respond.split("|")
+            if(status == "success") {
+                Swal.fire({
+                    title: "Berhasil",
+                    text: status,
+                    icon: 'success',
+                })
+                setTimeout("location.href='/dashboard'", 3000);           
+            } else {
+                Swal.fire({
+                    title: "Error !",
+                    text: 'Maaf Gagal Absen, Silahkan Hubungi IT',
+                    icon: 'error',
+                })
+            }
+        }
+    });
+    
+});
 </script>
 @endpush
