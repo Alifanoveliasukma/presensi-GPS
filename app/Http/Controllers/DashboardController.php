@@ -3,11 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard.dashboard');
+        $hariIni = date("Y-m-d");
+        $bulanIni = date('m'); // 1 atau januari
+        $tahunIni = date("Y"); // 2023
+        $nik = Auth::guard('karyawan')->user()->nik;
+        $presensiHariIni = DB::table('presensi')->where('nik', $nik)->where('tgl_presensi', $hariIni)->first();
+        $historyBulanIni = DB::table('presensi')->whereRaw('MONTH(tgl_presensi)="'. $bulanIni . '"')
+        ->whereRaw('YEAR(tgl_presensi)="' .$tahunIni . '"')
+        ->orderBy('tgl_presensi')
+        ->get();
+
+        // dd($historyBulanIni); buat cek nanti
+        return view('dashboard.dashboard', compact('presensiHariIni','historyBulanIni'));
+        
     }
 }
