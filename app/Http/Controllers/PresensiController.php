@@ -22,8 +22,8 @@ class PresensiController extends Controller
         $nik = Auth::guard('karyawan')->user()->nik;
         $tgl_presensi = date("Y-m-d");
         $jam = date("H:i:s");
-        $latitudeKantor = -6.225810109742995; 
-        $longitudeKantor = 106.83049087003847;
+        $latitudeKantor = -6.229229390303065; 
+        $longitudeKantor = 106.8269483840514;
         $lokasi = $request->lokasi;
         $lokasiUser = explode(",", $lokasi);
         $latitudeUser = $lokasiUser[0];
@@ -31,6 +31,12 @@ class PresensiController extends Controller
         $jarak = $this->distance($latitudeKantor, $longitudeKantor, $latitudeUser, $longitudeUser);
         $radius = round($jarak["meters"]);
         
+        // $cek = DB::table('presensi')->where('tgl_presensi', $tgl_presensi)->where('nik', $nik)->count();
+        // if ($cek > 0) {
+        //     $ket = "out";
+        // }else {
+        //     $ket = "in";
+        // }
         $image = $request->image;
         $folderPath = "public/uploads/absensi/";
         $formatName = $nik . "-" . $tgl_presensi;
@@ -40,10 +46,9 @@ class PresensiController extends Controller
         // Buat nama file dengan menambahkan timestamp ke dalamnya
         $timestamp = time(); // Waktu saat ini dalam bentuk UNIX timestamp
         $fileName = $formatName . "-" . $timestamp . ".png";
-    
+
         $file = $folderPath . $fileName;
 
-        
         $cek = DB::table('presensi')->where('tgl_presensi', $tgl_presensi)->where('nik', $nik)->count();
         if($radius > 10){
             echo "error|Maaf Anda Berada Diluar Radius, Jarak Anda ". $radius ." Meter dari Kantor |radius";
