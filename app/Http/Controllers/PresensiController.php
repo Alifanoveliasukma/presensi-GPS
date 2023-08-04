@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 
 class PresensiController extends Controller
@@ -98,5 +100,40 @@ class PresensiController extends Controller
         $kilometers = $miles * 1.609344;
         $meters = $kilometers * 1000;
         return compact('meters');
+    }
+
+    public function editprofile()
+    {
+        $nik = Auth::guard('karyawan')->user()->nik;
+        $karyawan = DB::table('karyawan')->where('nik', $nik)->first();
+        return view('presensi.editProfile', compact('karyawan'));
+    }
+
+    public function updateprofile(Request $request)
+    {
+        $nik = Auth::guard('karyawan')->user()->nik;
+        $nama_karyawan = $request->nama_karyawan;
+        $no_hp = $request->no_hp;
+        $password = Hash::make($request->password);
+
+        if(!empty($password)) {
+            $data = [
+                'nama_karyawan' => $nama_karyawan,
+                'no_hp' => $no_hp,
+            ];
+        } else {
+            $data = [
+                'nama_karyawan' => $nama_karyawan,
+                'no_hp' => $no_hp,
+                'password' => $password
+            ];
+        }
+
+        $update = DB::table('karyawan')->where('nik', $nik)->update($data);
+        if($update){
+            return Redirect::back();
+        } else {
+            return Redirect::back();
+        }
     }
 }

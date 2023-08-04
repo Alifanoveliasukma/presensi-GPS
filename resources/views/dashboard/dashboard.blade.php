@@ -6,8 +6,8 @@
             <img src="assets/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded">
         </div>
         <div id="user-info">
-            <h2 id="user-name">Adam Abdi Al A'la</h2>
-            <span id="user-role">Head of IT</span>
+            <h2 id="user-name">{{ Auth::guard('karyawan')->user()->nama_karyawan }}</h2>
+            <span id="user-role">{{ Auth::guard('karyawan')->user()->jabatan }}</span>
         </div>
     </div>
 </div>
@@ -186,7 +186,7 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px !important; line-height: 0.8rem">
-                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 1px; font-size:0.5rem; z-index:999">10</span>
+                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 1px; font-size:0.5rem; z-index:999">{{ $rekapPresensi->jmlhadir }}</span>
                         <ion-icon name="accessibility-outline" class="text-primary mb-1" style="font-size: 1.6rem;"></ion-icon>
                         <br>
                         <span style="font-size: 0.8rem; font-weight:500">Hadir</span>
@@ -216,7 +216,7 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px !important; line-height: 0.8rem">
-                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 1px; font-size:0.5rem; z-index:999">10</span>
+                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 1px; font-size:0.5rem; z-index:999">{{ $rekapPresensi->jmlterlambat }}</span>
                         <ion-icon name="alarm-outline" class="text-danger mb-1" style="font-size: 1.6rem;"></ion-icon>
                         <br>
                         <span style="font-size: 0.8rem; font-weight:500">Telat</span>
@@ -264,48 +264,22 @@
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel">
                 <ul class="listview image-listview">
+                    @foreach( $leaderBoard as $d)
                     <li>
                         <div class="item">
                             <img src="assets/img/sample/avatar/avatar1.jpg" alt="image" class="image">
                             <div class="in">
-                                <div>Edward Lindgren</div>
-                                <span class="text-muted">Designer</span>
+                                <div>
+                                    <b>{{ $d->nama_karyawan }}</b> <br>
+                                    <small class="text-muted">{{ $d->jabatan }}</small>
+                                </div>
+                                <span class="badge {{ $d->jam_in < "07.00" ? "bg-success" : "bg-danger" }}">
+                                    {{ $d->jam_in }}
+                                </span>
                             </div>
                         </div>
                     </li>
-                    <li>
-                        <div class="item">
-                            <img src="assets/img/sample/avatar/avatar1.jpg" alt="image" class="image">
-                            <div class="in">
-                                <div>Emelda Scandroot</div>
-                                <span class="badge badge-primary">3</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="item">
-                            <img src="assets/img/sample/avatar/avatar1.jpg" alt="image" class="image">
-                            <div class="in">
-                                <div>Henry Bove</div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="item">
-                            <img src="assets/img/sample/avatar/avatar1.jpg" alt="image" class="image">
-                            <div class="in">
-                                <div>Henry Bove</div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="item">
-                            <img src="assets/img/sample/avatar/avatar1.jpg" alt="image" class="image">
-                            <div class="in">
-                                <div>Henry Bove</div>
-                            </div>
-                        </div>
-                    </li>
+                    @endforeach
                 </ul>
             </div>
 
